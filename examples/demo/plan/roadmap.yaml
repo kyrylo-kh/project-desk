@@ -1,0 +1,60 @@
+# The demo plan. The AI keeps it current; the desk shows it in the Plan tab.
+updated: 2026-01-15
+now: B3
+
+actions:
+  - title: "Walk the test run R-0001"
+    about: "Eight short cases over sign-up and the first note. Open the Test Desk tab, mark each case, then press Finish the run."
+    note: "Start the app first; the setup line of the run says how."
+    links: [qa/runs/R-0001-sign-up-and-first-note.md]
+    when: this week
+  - title: Choose the visual direction
+    about: "Page design waits for it."
+    decisions: [D-0001]
+    when: before the next phase
+
+phases:
+  - id: P1
+    title: Foundations
+    status: done
+    about: Repository, tooling and the first deploy.
+    items:
+      - id: B1
+        title: Repository and tooling
+        status: done
+        about: Tests, lint and CI run on every change.
+      - id: B2
+        title: Sign-up
+        status: done
+        about: People can create an account with an email code.
+        decisions: [D-0003]
+  - id: P2
+    title: First release
+    status: doing
+    about: The smallest version people can use every day.
+    items:
+      - id: B3
+        title: Notes
+        status: doing
+        about: Write, edit and find notes.
+        decisions: [D-0002]
+      - id: B4
+        title: Visual design
+        status: waiting
+        needs: D-0001, the visual direction
+        about: Apply one visual direction to every screen.
+        decisions: [D-0001]
+      - id: B5
+        title: Usage insights
+        status: later
+        about: Learn where people get stuck.
+        decisions: [D-0004]
+  - id: P3
+    title: Launch
+    status: next
+    about: Hosting, a privacy notice and the first users.
+    items:
+      - id: B6
+        title: Hosting
+        status: next
+        about: Run the app for real users, with backups.

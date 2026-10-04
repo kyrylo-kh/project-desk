@@ -1,0 +1,87 @@
+[project]
+name = "project-desk"
+version = "0.1.0"
+description = "A local web app where an AI coding agent asks you for decisions, shows the plan and hands you manual test runs, all as files in your repo."
+readme = "README.md"
+license = "FSL-1.1-ALv2"
+license-files = ["LICENSE.md"]
+requires-python = ">=3.11"
+authors = [{ name = "Kyrylo Kholodenko" }]
+keywords = ["ai-agents", "claude-code", "decisions", "human-in-the-loop", "markdown", "yaml"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Environment :: Console",
+    "Environment :: Web Environment",
+    "Intended Audience :: Developers",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Software Development",
+    "Typing :: Typed",
+]
+dependencies = [
+    "click>=8.1",
+    "markdown>=3.5",
+    "ruamel.yaml>=0.18",
+]
+
+[project.urls]
+Homepage = "https://github.com/kyrylo-kh/project-desk"
+Issues = "https://github.com/kyrylo-kh/project-desk/issues"
+Changelog = "https://github.com/kyrylo-kh/project-desk/blob/main/CHANGELOG.md"
+
+[project.scripts]
+desk = "project_desk.cli:main"
+project-desk = "project_desk.cli:main"
+
+[dependency-groups]
+dev = [
+    "mypy>=1.11",
+    "pytest>=8",
+    "ruff>=0.6",
+    "types-Markdown>=3.5",
+]
+
+[build-system]
+requires = ["uv_build>=0.9.13,<0.10"]
+build-backend = "uv_build"
+
+[tool.ruff]
+line-length = 120
+target-version = "py311"
+src = ["src", "tests"]
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "UP", "B", "SIM", "RUF"]
+ignore = [
+    "RUF001", # ambiguous unicode characters: the Ukrainian locale and fixtures are deliberate
+    "RUF002",
+    "RUF003",
+    "SIM105", # contextlib.suppress reads worse in the hot paths here
+]
+
+[tool.ruff.lint.isort]
+known-local-folder = ["support"]  # tests/support.py, imported through conftest's sys.path entry
+
+[tool.ruff.lint.per-file-ignores]
+"tests/*" = ["E501"]
+
+[tool.mypy]
+python_version = "3.11"
+files = ["src"]
+disallow_untyped_defs = true
+check_untyped_defs = true
+warn_unused_ignores = true
+warn_redundant_casts = true
+no_implicit_optional = true
+
+[[tool.mypy.overrides]]
+module = ["ruamel.*"]
+ignore_missing_imports = true
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"

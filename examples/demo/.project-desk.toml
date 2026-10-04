@@ -1,0 +1,8 @@
+# The demo project: `desk --root examples/demo serve --open` (or `make serve`).
+lang = "en"
+theme = "auto"
+modules = ["plan", "decisions", "qa"]
+
+[decisions]
+types = ["product", "design", "architecture", "data", "process", "brand"]
+open_limit = 3

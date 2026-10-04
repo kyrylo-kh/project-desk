@@ -1,0 +1,20 @@
+# The plan. The AI keeps it current; the desk shows it in the Plan tab. Format: plan/README.md.
+updated: 2026-01-01
+now: B1
+
+actions: []
+
+phases:
+  - id: P1
+    title: First phase
+    status: doing
+    about: What this phase delivers, in one plain line.
+    items:
+      - id: B1
+        title: First item
+        status: doing
+        about: What this item delivers, in one plain line.
+      - id: B2
+        title: Second item
+        status: next
+        about: What this item delivers, in one plain line.

@@ -1,0 +1,49 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest]
+        python: ["3.11", "3.12", "3.13"]
+        include:
+          - os: macos-latest
+            python: "3.13"
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - uses: astral-sh/setup-uv@d0cc045d04ccac9d8b7881df0226f9e82c39688e # v6
+        with:
+          python-version: ${{ matrix.python }}
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4; the browser render tests run the ES modules in Node 20.19+ or 22.7+
+        with:
+          node-version: "22"
+      - run: uv sync --group dev --locked
+      - run: uv run --group dev ruff check
+      - run: uv run --group dev ruff format --check
+      - run: uv run --group dev mypy
+      - run: uv run --group dev pytest
+        env:
+          DESK_REQUIRE_NODE: "1" # fail, do not skip, when node is missing or too old
+
+  package:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - uses: astral-sh/setup-uv@d0cc045d04ccac9d8b7881df0226f9e82c39688e # v6
+      - run: uv build
+      - name: The wheel ships the UI and the locales, and the console scripts work
+        run: |
+          unzip -l dist/*.whl | grep -E "static/js/main.js|static/modules/qa/tab.js|locales/uk.json|templates/skills"
+          uv tool run --from dist/*.whl desk --version
+          uv tool run --from dist/*.whl project-desk --help
+          cd examples/demo && uv tool run --from ../../dist/*.whl desk validate
